@@ -4,6 +4,7 @@ import * as joi from 'joi';
 const envVarsSchema = joi
   .object({
     PORT: joi.number().required(),
+    NATS_SERVER: joi.string().required(),
   })
   .unknown(true);
 
@@ -16,10 +17,12 @@ if (error) {
 
 interface Env {
   PORT: number;
+  NATS_SERVER: string;
 }
 
 const env: Env = value as Env;
 
 export const envs = {
   PORT: env?.PORT,
+  NATS_SERVER: env?.NATS_SERVER,
 };
