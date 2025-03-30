@@ -88,4 +88,36 @@ export class AuthService extends PrismaClient implements OnModuleInit {
       }),
     };
   }
+
+  async verifyUser(token: string) {
+    try {
+      const payload: JwtPayload = await this.jwtService.verifyAsync(token, {
+        secret: envs.SECRET_JWT,
+      });
+
+      const user = await this.user.findUnique({
+        where: {
+          email: payload.email,
+        },
+      });
+
+      if (!user) {
+        throw new RpcException({
+          status: 401,
+          message: 'Unauthorized',
+        });
+      }
+
+      return {
+        user: user,
+        token: token,
+      };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      throw new RpcException({
+        status: 401,
+        message: 'Unauthorized',
+      });
+    }
+  }
 }

@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { VerifyDto } from './dto/verify.dto';
 
 @Controller()
 export class AuthController {
@@ -19,9 +20,7 @@ export class AuthController {
   }
 
   @MessagePattern('verify.user')
-  verify() {
-    return {
-      message: 'User verified successfully',
-    };
+  verify(@Payload() verifyDto: VerifyDto) {
+    return this.authService.verifyUser(verifyDto.token);
   }
 }
